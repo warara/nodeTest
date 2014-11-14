@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(nodeTest)
 
 ## Find catkin and any catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg)
+find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg quadrotor)
 
 ## Declare ROS messages and services
 
@@ -16,7 +16,9 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg)
 catkin_package()
 
 ## Build talker and listener
-include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(include 
+                       ${catkin_INCLUDE_DIRS} 
+                       {quadrotor_INCLUDE_DIRS})
 
 add_executable(NodeTestMain src/nodeTestMain.cpp)
 target_link_libraries(NodeTestMain ${catkin_LIBRARIES})

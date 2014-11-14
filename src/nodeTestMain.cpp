@@ -10,7 +10,7 @@
 #include "ros/ros.h"
 #include <geometry_msgs/Vector3Stamped.h>
 #include <geometry_msgs/Pose.h>
-#include "Commands.h"
+#include "quad_finite_state.h"
 #include "CommandSrv.h"
 #include <cstdlib>
 
@@ -23,22 +23,33 @@ int main(int argc, char **argv)
   ros::NodeHandle n;
   ros::ServiceClient client = n.serviceClient<ros_mavlink::CommandSrv>("/quad/cmds");
   ros_mavlink::CommandSrv srv;
-  Commands cmd = GOTO;
-  srv.request.command = cmd;
 
-  geometry_msgs::Pose pose;
-  pose.position.x = 1; pose.position.z = 2; pose.position.y = 3;
-  pose.orientation.w = 0.1;  pose.orientation.x = 0.1;  pose.orientation.y = 0.2;  pose.orientation.z = -0.1;
-  srv.request.pose = pose;
+  srv.request.command = CALIBRATE;
 
 ROS_INFO("send service");
   if (client.call(srv))
   {
-    ROS_INFO("Command succesfully returned");
+    ROS_INFO("Command succesfully returned %d", srv.response.success);
   }
   else
   {
-    ROS_ERROR("Failed to call service %d", srv.response.result);
+    ROS_ERROR("Failed to call service %d", srv.response.success);
+    return 1;
+  }
+
+
+ // ros_mavlink::CommandSrv srv;
+
+  srv.request.command = TOGGLE_ARM;
+
+ROS_INFO("send service");
+  if (client.call(srv))
+  {
+    ROS_INFO("Command succesfully returned %d", srv.response.success);
+  }
+  else
+  {
+    ROS_ERROR("Failed to call service %d", srv.response.success);
     return 1;
   }
 
